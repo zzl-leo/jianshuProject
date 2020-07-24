@@ -19,18 +19,30 @@ import {
 } from "./styled";
 
 class Header extends React.Component {
-  getListArea = (show, list) => {
-    if (show) {
+  getListArea = () => {
+    const { focused, list, page, handleMouseEnter, handleMouseLeave, mouseIn, handleClickChange} = this.props;
+    const pageList = []
+    for(let i = (page - 1) * 10; i < page * 10; i++) {
+      if(list[i]) {
+        pageList.push(
+          <SearchInfoItem key={i}>{list[i]}</SearchInfoItem>
+        )
+      }
+    }
+    if (focused || mouseIn) {
       return (
-        <SearchInfo>
+        <SearchInfo 
+          onMouseLeave={handleMouseLeave}
+          onMouseEnter={handleMouseEnter}>
           <SearchInfoTitle>
             热门搜索
-            <SearchInfoSwitch>换一批</SearchInfoSwitch>
+            <SearchInfoSwitch onClick={() => handleClickChange(this.spinIcon)}>
+              <i ref={(icon) => {this.spinIcon = icon}} className="iconfont spin">&#xe612;</i>
+              换一批
+            </SearchInfoSwitch>
           </SearchInfoTitle>
           <SearchInfoList>
-            {list.map(item => {
-              return <SearchInfoItem key={item}>{item}</SearchInfoItem>
-            })}
+            {pageList}
           </SearchInfoList>
         </SearchInfo>
       );
@@ -39,7 +51,7 @@ class Header extends React.Component {
     }
   };
   render() {
-    const { focused, list, handleInputFocus, handleInputBlur } = this.props;
+    const { focused, handleInputFocus, list, handleInputBlur } = this.props;
     return (
       <HeaderWrapper>
         <Logo />
@@ -53,15 +65,15 @@ class Header extends React.Component {
           <SearchWrapper>
             <CSSTransition timeout={300} in={focused} classNames="slide">
               <NavSearch
-                onFocus={handleInputFocus}
+                onFocus={() => handleInputFocus(list)}
                 onBlur={handleInputBlur}
                 className={focused ? "focused" : ""}
               ></NavSearch>
             </CSSTransition>
-            <i className={focused ? "focused iconfont" : "iconfont"}>
+            <i className={focused ? "focused iconfont zoom" : "iconfont zoom"}>
               &#xe662;
             </i>
-            {this.getListArea(focused, list)}
+            {this.getListArea()}
           </SearchWrapper>
         </Nav>
         <Addition>
@@ -80,18 +92,35 @@ const mapStateToProps = (state) => {
   return {
     focused: state.header.focused,
     list: state.header.list,
+    page: state.header.page,
+    totalPage: state.header.totalPage,
+    mouseIn: state.header.mouseIn,
+    rotate: state.header.rotate,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleInputFocus() {
-      dispatch(actionCreators.getList())
+    handleInputFocus(list) {
+      list.length === 0 && dispatch(actionCreators.getList())
       dispatch(actionCreators.searchFocus());
     },
     handleInputBlur() {
       dispatch(actionCreators.searchBlur());
     },
+    handleMouseEnter() {
+      dispatch(actionCreators.mouseEnter())
+    },
+    handleMouseLeave() {
+      dispatch(actionCreators.mouseLeave())
+    },
+    handleClickChange(spin) {
+      let rotate = spin.style.transform.replace(/[^0-9]/ig, '') || 0
+      rotate = parseInt(rotate, 10) + 360
+      spin.style.transform = `rotate(${rotate}deg)`
+
+      dispatch(actionCreators.changePage())
+    }
   };
 };
 
