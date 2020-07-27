@@ -109,3 +109,16 @@ export const LordMore = styled.div`
     margin: 30px 0;
     cursor: pointer;
 `
+
+export const BackTop = styled.div`
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    border: 1px solid #ccc;
+    bottom: 100px;
+    right: 100px;
+    font-size: 12px;
+    cursor: pointer;
+`

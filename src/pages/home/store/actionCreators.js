@@ -8,9 +8,10 @@ const changeHomeData = (result) => ({
     recommendList: result.recommendList
 })
 
-const getMoreList = (result) => ({
+const getMoreList = (result, page) => ({
     type: actionTypes.GET_MORE_LIST,
-    value: result
+    value: result,
+    page: page
 })
 
 export const getHomeInfo = () => {
@@ -22,11 +23,16 @@ export const getHomeInfo = () => {
     }
 }
 
-export const getMore = () => {
+export const getMore = (page) => {
     return (dispatch) => {
-        axios.get('/api/homeList.json').then(res => {
+        axios.get('/api/homeList.json?page=' + page).then(res => {
             const result = res.data.data.list
-            dispatch(getMoreList(result))
+            dispatch(getMoreList(result, page))
         })
     }
 }
+
+export const changeScrollFlag = (flag) => ({
+    type: actionTypes.CHANGE_SCROLL_FLAG,
+    value: flag
+})
