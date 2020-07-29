@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { CSSTransition } from "react-transition-group";
 import { actionCreators } from "./store";
+import {logOut} from '../../pages/login/store/actionCreators'
+import { Link } from 'react-router-dom';
 import {
   HeaderWrapper,
   Logo,
@@ -51,14 +53,19 @@ class Header extends React.Component {
     }
   };
   render() {
-    const { focused, handleInputFocus, list, handleInputBlur } = this.props;
+    const { focused, login, handleInputFocus, list, handleInputBlur, handleLogOut } = this.props;
     return (
       <HeaderWrapper>
-        <Logo />
+        <Link to='/'>
+          <Logo />
+        </Link>
         <Nav>
-          <NavItem className="left active">首页</NavItem>
+          <Link to='/'><NavItem className="left active">首页</NavItem></Link>
           <NavItem className="left">下载App</NavItem>
-          <NavItem className="right">登录</NavItem>
+          {
+            login ?  <NavItem className="right" onClick={handleLogOut}>退出</NavItem> : <Link to='/login'><NavItem className="right">登录</NavItem></Link>
+          }
+          
           <NavItem className="right">
             <i className="iconfont">&#xe604;</i>
           </NavItem>
@@ -77,10 +84,12 @@ class Header extends React.Component {
           </SearchWrapper>
         </Nav>
         <Addition>
-          <Button className="write">
-            <i className="iconfont">&#xe6a4;</i>
-            写文章
-          </Button>
+          <Link to='/write'>
+            <Button className="write">
+              <i className="iconfont">&#xe6a4;</i>
+              写文章
+            </Button>
+          </Link>
           <Button className="reg">注册</Button>
         </Addition>
       </HeaderWrapper>
@@ -96,6 +105,7 @@ const mapStateToProps = (state) => {
     totalPage: state.header.totalPage,
     mouseIn: state.header.mouseIn,
     rotate: state.header.rotate,
+    login: state.login.login
   };
 };
 
@@ -120,6 +130,9 @@ const mapDispatchToProps = (dispatch) => {
       spin.style.transform = `rotate(${rotate}deg)`
 
       dispatch(actionCreators.changePage())
+    },
+    handleLogOut() {
+      dispatch(logOut())
     }
   };
 };

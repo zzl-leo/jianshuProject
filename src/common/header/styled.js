@@ -2,13 +2,12 @@ import styled from 'styled-components'
 import logPic from '../../static/logo.png'
 export const HeaderWrapper = styled.div`
     position: relative;
+    z-index: 99;
     height: 56px;
     border-bottom: 1px solid #f0f0f0;
 `
 // 给元素增加属性 attrs
-export const Logo = styled.a.attrs({
-    href: '/'
-})`
+export const Logo = styled.span`
     position: absolute;
     top: 0;
     left: 0;

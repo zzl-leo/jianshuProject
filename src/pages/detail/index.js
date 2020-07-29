@@ -1,8 +1,9 @@
 import React from 'react'
 import {DetailWrapper, Header, Content} from './styled'
 import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 import * as actionCreators from './store/actionCreators'
-class Detail extends React.Component {
+class Detail extends React.PureComponent {
     render () {
         const {title, content} = this.props
         return (
@@ -33,4 +34,4 @@ const mapDispatchToProps  = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Detail)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Detail))

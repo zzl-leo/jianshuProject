@@ -24,7 +24,6 @@ export const spin = () => ({
     type: actionTypes.SPIN
 })
 
-
 const changeList = (data) => ({
     type: actionTypes.CHANGE_LIST,
     value: data,
